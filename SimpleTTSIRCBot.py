@@ -358,6 +358,8 @@ class IRCBot(threading.Thread):
 			print("In sendToTextToSpeech")
 			
 			voices = self.mytts.tts.engine.getProperty('voices')
+			#for item in voices:
+			#	print(item.name)
 			myDefaultVoiceNumber = 0
 			voiceRate = 200
 			if voices:
