@@ -136,10 +136,16 @@ class IRCBot(threading.Thread):
 		self.users.save() # save custom voices to file
 		if self.mytts:
 			self.mytts.queue.put("exit")
+
 		logging.info("in close in thread")
 		try:
 			# send closing message immediately
 			self.irc.send(("PRIVMSG " + self.channel + " :" + str("closing tts bot") + "\r\n").encode('utf8'))
+			while (threading.active_count() > 1):
+				pass	
+			logging.info("Shutting Down!")
+			sys.exit()
+
 		except Exception as e:
 			logging.error("In close")
 			logging.error(str(e))
@@ -381,7 +387,7 @@ class IRCBot(threading.Thread):
 						if user.voiceNumber:
 							myDefaultVoiceNumber = int(user.voiceNumber) # set the saved voice number if it exists.
 						if user.alias:
-							userName = user.alias # set username to be spoken to alias if it exists.
+							userName = self.preprocessUsername(user.alias) # set username to be spoken to alias if it exists.
 						if user.voiceRate:
 							voiceRate = user.voiceRate # set voiceRate to be spoken if it exists.
 					if not isinstance(myDefaultVoiceNumber, int):
